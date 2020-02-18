@@ -45,30 +45,36 @@ container.appendChild(clear);
 
 
 //Calculator Logic
-var curr = null;
-var currDisplay = display.textContent;
-var input = [];
+var a = null;
+var currentValue;
+var currOp = null;
+
 numBTNS.forEach(btn=>{
     btn.addEventListener('click',e=>{
-        if (curr === null){
-            display.textContent = e.target.innerHTML;
-            curr = parseInt(display.textContent);
+        if (a === null){
+			//seperate display logic from calculation logic
+			display.textContent = e.target.innerHTML;
+			
         }else{
             display.textContent += e.target.innerHTML;
             curr = parseInt(display.textContent)
         }
     })
 })
+
 operatorBTNS.forEach(op=>{
     op.addEventListener('click',e=>{
-        if (curr != null){
-            operate(e.target.innerHTML,curr,display.innerHTML)
-        }
-    })
-})
-
-
-
+        if (a === null){
+			currOp = e.target.innerHTML;
+			a = display.textContent;
+		} 
+		else {
+			display.textContent = operate(currOp,a,display.textContent);
+			a = display.textContent;
+			currOp = e.target.innerHTML;
+		}
+	 })
+});
 
 function add(a,b){
     return a + b;
