@@ -5,7 +5,7 @@ container.style.height='50%'
 //Create the display
 const display = document.createElement('div');
 display.style.border = '1px solid black';
-display.textContent="0";
+display.textContent=0;
 display.style.width='100%';
 display.style.textAlign = 'right';
 container.appendChild(display)
@@ -37,44 +37,31 @@ zero.textContent = '0'
 clear.style.width='66.67%'
 zero.style.width='33.33%'
 clear.addEventListener('click',e=>{
-    curr = 0;
     display.textContent = '0';
 })
 container.appendChild(zero);
 container.appendChild(clear);
 
-
-//Calculator Logic
-var a = null;
-var currentValue;
-var currOp = null;
-
 numBTNS.forEach(btn=>{
     btn.addEventListener('click',e=>{
-        if (a === null){
-			//seperate display logic from calculation logic
-			display.textContent = e.target.innerHTML;
-			
-        }else{
-            display.textContent += e.target.innerHTML;
-            curr = parseInt(display.textContent)
-        }
+        displayLogic(e.target.innerHTML);
     })
 })
 
 operatorBTNS.forEach(op=>{
     op.addEventListener('click',e=>{
-        if (a === null){
-			currOp = e.target.innerHTML;
-			a = display.textContent;
-		} 
-		else {
-			display.textContent = operate(currOp,a,display.textContent);
-			a = display.textContent;
-			currOp = e.target.innerHTML;
-		}
+       
 	 })
 });
+
+function displayLogic(numPress){
+    var number = parseInt(numPress)
+    display.textContent === "0" ? display.textContent= number:display.textContent += number;
+}
+
+function currDisplay (){
+    return parseInt(display.textContent);
+}
 
 function add(a,b){
     return a + b;
