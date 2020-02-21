@@ -1,59 +1,74 @@
-const container = document.querySelector('#container');
-container.style.width='50%'
-container.style.height='50%'
+//Our container that will encapsulate our calculator
+const container = document.querySelector("#container");
+container.style.width="50%";
+container.style.height="50%";
 
 //Create the display
-const display = document.createElement('div');
-display.style.border = '1px solid black';
+const display = document.createElement("div");
+display.style.border = "1px solid black";
 display.textContent=0;
-display.style.width='100%';
-display.style.textAlign = 'right';
-container.appendChild(display)
+display.style.width="100%";
+display.style.textAlign = "right";
+container.appendChild(display);
 
 //Create operator buttons
-var operators = ['+','-','*','/'];
+var operators = ["+","-","*","/"];
 var operatorBTNS = [];
 var numBTNS = [];
 operators.forEach(op=>{
-    var button = document.createElement('button');
+    var button = document.createElement("button");
     button.textContent = op;
-    button.style.width='25%'
+    button.style.width="25%";
     operatorBTNS.push(button);
-    container.appendChild(button)
+    container.appendChild(button);
 })
 //Create number buttons
 for(var i=1; i<=9;i++){
-    var num = document.createElement('button');
+    var num = document.createElement("button");
     num.textContent = i;
-    num.style.width = '33.33%'
+    num.style.width = "33.33%";
     numBTNS.push(num);
     container.appendChild(num);
 }
-//Create clear and zero button
-var clear = document.createElement('button');
-var zero = document.createElement('button');
-clear.textContent = 'C'
-zero.textContent = '0'
-clear.style.width='66.67%'
-zero.style.width='33.33%'
-clear.addEventListener('click',e=>{
-    display.textContent = '0';
+//Create clear,zero, and equal buttons
+var clear = document.createElement("button");
+var zero = document.createElement("button");
+var equal = document.createElement("button");
+clear.textContent = "C";
+zero.textContent = "0";
+equal.textContent = "=";
+clear.style.width="66.67%";
+zero.style.width="33.33%";
+equal.style.width = "100%";
+clear.addEventListener("click",e=>{
+	display.textContent = "0";
+	a = null;
+	opCaptured = null;
+})
+zero.addEventListener("click",e=>{
+	displayLogic(e.target.innerHTML)
+})
+equal.addEventListener("click",e=>{
+	a = operate(opCaptured,a,currDisplay())
+	displayLogic(a);
+	opCaptured = null;
 })
 container.appendChild(zero);
 container.appendChild(clear);
+container.appendChild(equal);
 
+//Main Logic
 var opCaptured = null;
 var a = null;
 
 numBTNS.forEach(btn=>{
-    btn.addEventListener('click',e=>{
-        displayLogic(e.target.innerHTML);
+    btn.addEventListener("click",e=>{
+		displayLogic(e.target.innerHTML);
     })
 });
 operatorBTNS.forEach(op=>{
-    op.addEventListener('click',e=>{
-        console.log(e);
-        if (a === null){
+    op.addEventListener("click",e=>{
+        if (a === null || opCaptured === null){
            a = currDisplay();
            opCaptured = e.target.innerHTML;
         } else {
@@ -64,7 +79,7 @@ operatorBTNS.forEach(op=>{
 	 })
 });
 function displayLogic(numToDisplay){ 
-    var number = parseInt(numToDisplay)
+	var numToDisplay = parseInt(numToDisplay)
     display.textContent === "0" || opCaptured !== null ? display.textContent= numToDisplay:display.textContent += numToDisplay;
 };
 function currDisplay (){
@@ -80,7 +95,6 @@ function multiply(a,b){
     return a*b;
 };
 function divide(a,b){
-    if (b==0) return "You can't divide by zero, silly."
     return a/b;
 };
 function operate(operator,a,b){
@@ -92,7 +106,7 @@ function operate(operator,a,b){
             return subtract(a,b)
             break;
         case "/":
-            return divide(a,b)
+            return divide(a,b);
             break;
         case "*":
             return multiply(a,b)
