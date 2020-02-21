@@ -42,27 +42,34 @@ clear.addEventListener('click',e=>{
 container.appendChild(zero);
 container.appendChild(clear);
 
+var opCaptured = null;
+var a = null;
+
 numBTNS.forEach(btn=>{
     btn.addEventListener('click',e=>{
         displayLogic(e.target.innerHTML);
     })
-})
-
+});
 operatorBTNS.forEach(op=>{
     op.addEventListener('click',e=>{
-       
+        console.log(e);
+        if (a === null){
+           a = currDisplay();
+           opCaptured = e.target.innerHTML;
+        } else {
+            a = operate(opCaptured,a,currDisplay());
+            opCaptured = e.target.innerHTML; 
+            displayLogic(a);
+        }
 	 })
 });
-
-function displayLogic(numPress){
-    var number = parseInt(numPress)
-    display.textContent === "0" ? display.textContent= number:display.textContent += number;
-}
-
+function displayLogic(numToDisplay){ 
+    var number = parseInt(numToDisplay)
+    display.textContent === "0" || opCaptured !== null ? display.textContent= numToDisplay:display.textContent += numToDisplay;
+};
 function currDisplay (){
     return parseInt(display.textContent);
-}
-
+};
 function add(a,b){
     return a + b;
 };
