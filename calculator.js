@@ -30,32 +30,42 @@ for(var i=1; i<=9;i++){
     numBTNS.push(num);
     container.appendChild(num);
 }
-//Create clear,zero, and equal buttons
+//Create clear, zero, equal, and decimal buttons
 var clear = document.createElement("button");
 var zero = document.createElement("button");
 var equal = document.createElement("button");
+var decimal = document.createElement("button");
+
 clear.textContent = "C";
 zero.textContent = "0";
 equal.textContent = "=";
+decimal.textContent = ".";
+
 clear.style.width="66.67%";
 zero.style.width="33.33%";
 equal.style.width = "100%";
+decimal.style.width="100%";
+
+decimal.addEventListener("click",e=>{
+	displayLogic(e.target.innerHTML);
+});
 clear.addEventListener("click",e=>{
 	display.textContent = "0";
 	a = null;
 	opCaptured = null;
-})
+});
 zero.addEventListener("click",e=>{
 	displayLogic(e.target.innerHTML)
-})
+});
 equal.addEventListener("click",e=>{
 	a = operate(opCaptured,a,currDisplay())
 	displayLogic(a);
 	opCaptured = null;
-})
+});
 container.appendChild(zero);
 container.appendChild(clear);
 container.appendChild(equal);
+container.appendChild(decimal);
 
 //Main Logic
 var opCaptured = null;
@@ -78,12 +88,27 @@ operatorBTNS.forEach(op=>{
         }
 	 })
 });
-function displayLogic(numToDisplay){ 
-	var numToDisplay = parseInt(numToDisplay)
-    display.textContent === "0" || opCaptured !== null ? display.textContent= numToDisplay:display.textContent += numToDisplay;
+function displayLogic(input){ 
+	if (input === "."){
+		if (hasDecimal()){
+			return;
+		}
+		display.textContent+= input;
+		return;
+	}
+	var input = parseFloat(input)
+    currDisplay() === 0 || opCaptured !== null ? display.textContent= input:display.textContent += input;
 };
+function hasDecimal(){
+	var input = currDisplay().toString();
+	input = input.split();
+	input.forEach(char=>{
+		if (char === ".") return true;
+	});
+	return false;
+}
 function currDisplay (){
-    return parseInt(display.textContent);
+    return parseFloat(display.textContent);
 };
 function add(a,b){
     return a + b;
