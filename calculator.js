@@ -39,7 +39,7 @@ var decimal = document.createElement("button");
 clear.textContent = "C";
 zero.textContent = "0";
 equal.textContent = "=";
-decimal.textContent = ".";
+ decimal.textContent = ".";
 
 clear.style.width="66.67%";
 zero.style.width="33.33%";
@@ -58,33 +58,39 @@ zero.addEventListener("click",e=>{
 	displayLogic(e.target.innerHTML)
 });
 equal.addEventListener("click",e=>{
+	replace = true;	
 	a = operate(opCaptured,a,currDisplay())
 	displayLogic(a);
 	opCaptured = null;
+	
 });
 container.appendChild(zero);
 container.appendChild(clear);
 container.appendChild(equal);
-container.appendChild(decimal);
+ container.appendChild(decimal);
 
 //Main Logic
 var opCaptured = null;
 var a = null;
+var replace = false;
 
 numBTNS.forEach(btn=>{
     btn.addEventListener("click",e=>{
 		displayLogic(e.target.innerHTML);
+		replace = false;
     })
 });
 operatorBTNS.forEach(op=>{
     op.addEventListener("click",e=>{
         if (a === null || opCaptured === null){
            a = currDisplay();
-           opCaptured = e.target.innerHTML;
+		   opCaptured = e.target.innerHTML;
+		   replace = true;
         } else {
             a = operate(opCaptured,a,currDisplay());
             opCaptured = e.target.innerHTML; 
-            displayLogic(a);
+			replace = true;
+			displayLogic(a);
         }
 	 })
 });
@@ -97,7 +103,7 @@ function displayLogic(input){
 		return;
 	}
 	var input = parseFloat(input)
-    currDisplay() === 0 || opCaptured !== null ? display.textContent= input:display.textContent += input;
+    currDisplay() === 0 || replace === true ? display.textContent= input:display.textContent += input;
 };
 function hasDecimal(){
 	var input = currDisplay().toString();
