@@ -65,7 +65,7 @@ clear.addEventListener("click",e=>{
 })
 zero.addEventListener("click",e=>{
 	displayLogic(e.target.innerHTML)
-})
+});
 equal.addEventListener("click",e=>{
     if (opCaptured === null){
         replaceDisplay = true;
@@ -114,7 +114,8 @@ operatorBTNS.forEach(op=>{
             replaceDisplay = true;
             a = operate(opCaptured,a,currDisplay());
             opCaptured = e.target.innerHTML; 
-            displayLogic(a);
+			replace = true;
+			displayLogic(a);
         }
 	 })
 });
@@ -122,6 +123,14 @@ function displayLogic(numToDisplay){
     // if (numToDisplay !== ".") numToDisplay = parseFloat(numToDisplay);
     display.textContent === "0" || replaceDisplay === true ? display.textContent= numToDisplay:display.textContent += numToDisplay;
 };
+function hasDecimal(){
+	var input = currDisplay().toString();
+	input = input.split();
+	input.forEach(char=>{
+		if (char === ".") return true;
+	});
+	return false;
+}
 function currDisplay (){
     return parseFloat(parseFloat(display.textContent).toPrecision(12));
 };
