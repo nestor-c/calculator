@@ -30,40 +30,78 @@ for(var i=1; i<=9;i++){
     numBTNS.push(num);
     container.appendChild(num);
 }
-//Create clear,zero, and equal buttons
+//Create clear,zero, backspace, and equal buttons
 var clear = document.createElement("button");
 var zero = document.createElement("button");
 var equal = document.createElement("button");
+var decimal = document.createElement("button");
+var backspace = document.createElement("button");
 clear.textContent = "C";
 zero.textContent = "0";
 equal.textContent = "=";
+decimal.textContent = "."
+backspace.textContent = "🔙"; 
 clear.style.width="66.67%";
 zero.style.width="33.33%";
 equal.style.width = "100%";
+decimal.style.width = "100%";
+backspace.style.width = "100%";
+container.appendChild(zero);
+container.appendChild(clear);
+container.appendChild(equal);
+container.appendChild(decimal);
+container.appendChild(backspace);
+
+//-----Main Logic-----
+var opCaptured = null;
+var a = null;
+var replaceDisplay = false;
+
 clear.addEventListener("click",e=>{
 	display.textContent = "0";
 	a = null;
-	opCaptured = null;
+    opCaptured = null;
+    replaceDisplay = true;
 })
 zero.addEventListener("click",e=>{
 	displayLogic(e.target.innerHTML)
 })
 equal.addEventListener("click",e=>{
+    if (opCaptured === null){
+        replaceDisplay = true;
+        a = currDisplay();
+        opCaptured = null;
+        displayLogic(a)
+        return;
+    }
+    replaceDisplay = true;
 	a = operate(opCaptured,a,currDisplay())
 	displayLogic(a);
-	opCaptured = null;
+    opCaptured = null;
 })
-container.appendChild(zero);
-container.appendChild(clear);
-container.appendChild(equal);
-
-//Main Logic
-var opCaptured = null;
-var a = null;
-
+decimal.addEventListener("click",e=>{
+    if (!hasDecimal()){
+        replaceDisplay = false;
+        displayLogic(".");
+    }
+    else return;
+})
+backspace.addEventListener("click",e=>{
+    if (display.textContent.length === 1){
+        display.textContent = "0";
+    }
+    else{
+        replaceDisplay = true;
+        var edit = display.textContent.split("");
+        edit.pop();
+        displayLogic(edit.join(""))
+        replaceDisplay = false;
+    }
+})
 numBTNS.forEach(btn=>{
     btn.addEventListener("click",e=>{
-		displayLogic(e.target.innerHTML);
+        displayLogic(e.target.innerHTML);
+        replaceDisplay = false;
     })
 });
 operatorBTNS.forEach(op=>{
@@ -71,7 +109,9 @@ operatorBTNS.forEach(op=>{
         if (a === null || opCaptured === null){
            a = currDisplay();
            opCaptured = e.target.innerHTML;
+           replaceDisplay = true;
         } else {
+            replaceDisplay = true;
             a = operate(opCaptured,a,currDisplay());
             opCaptured = e.target.innerHTML; 
             displayLogic(a);
@@ -79,11 +119,11 @@ operatorBTNS.forEach(op=>{
 	 })
 });
 function displayLogic(numToDisplay){ 
-	var numToDisplay = parseInt(numToDisplay)
-    display.textContent === "0" || opCaptured !== null ? display.textContent= numToDisplay:display.textContent += numToDisplay;
+    // if (numToDisplay !== ".") numToDisplay = parseFloat(numToDisplay);
+    display.textContent === "0" || replaceDisplay === true ? display.textContent= numToDisplay:display.textContent += numToDisplay;
 };
 function currDisplay (){
-    return parseInt(display.textContent);
+    return parseFloat(parseFloat(display.textContent).toPrecision(12));
 };
 function add(a,b){
     return a + b;
@@ -113,4 +153,8 @@ function operate(operator,a,b){
             break;
         default: return "Invalid parameters."       
     }
+}
+function hasDecimal(){
+  var stringToCheck = currDisplay().toString();
+  return stringToCheck.includes(".")  
 }
