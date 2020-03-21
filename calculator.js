@@ -2,6 +2,18 @@
 const container = document.querySelector("#container");
 container.style.width="50%";
 container.style.height="50%";
+container.style.border="10px solid black";
+container.style.position = "relative";
+
+//Make calculator draggable
+container.addEventListener("mousedown",eContainer=>{
+    document.addEventListener("mousemove",eDoc=>{
+        container.style.left = (eContainer.clientX - eDoc.clientX) + "px";
+    })
+    document.onmouseup = e=>{
+        
+    }
+})
 
 //Create the display
 const display = document.createElement("div");
@@ -75,7 +87,7 @@ equal.addEventListener("click",e=>{
         return;
     }
     replaceDisplay = true;
-	a = operate(opCaptured,a,currDisplay())
+	a = operate(opCaptured,a,currDisplay()).toPrecision(2)
 	displayLogic(a);
     opCaptured = null;
 })
@@ -132,7 +144,7 @@ function hasDecimal(){
 	return false;
 }
 function currDisplay (){
-    return parseFloat(parseFloat(display.textContent).toPrecision(12));
+    return parseFloat(parseFloat(display.textContent).toFixed(04));
 };
 function add(a,b){
     return a + b;
@@ -149,16 +161,16 @@ function divide(a,b){
 function operate(operator,a,b){
     switch(operator){
         case "+":
-            return add(a,b)
+            return add(a,b);
             break;
         case "-":
-            return subtract(a,b)
+            return subtract(a,b);
             break;
         case "/":
             return divide(a,b);
             break;
         case "*":
-            return multiply(a,b)
+            return multiply(a,b);
             break;
         default: return "Invalid parameters."       
     }
